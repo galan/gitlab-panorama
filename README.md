@@ -144,3 +144,4 @@ Projects that could be used in conjunction to GitLab panorama to visualize, noti
 ### Disclamer
 GitLab is a registered trademark of GitLab, Inc. The [GitLab logo](https://about.gitlab.com/handbook/marketing/corporate-marketing/#gitlab-trademark--logo-guidelines) is subject to the terms of the Creative Commons Attribution Non-Commercial ShareAlike 4.0 International License.
 
+Originally developed at [Joblift GmbH](https://joblift.de/).
