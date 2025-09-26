@@ -14,271 +14,295 @@
 	<!-- script src="https://cdn.jsdelivr.net/npm/vue"></script -->
 
 	<style>
-* {
-	margin: 0;
- 	padding: 0;
- 	font-family: Roboto Mono,monospace;
-	color: var(--color-text);
-}
-html, body {
-	background-color: var(--color-background);
-}
-#app {
-}
-#pipeline-container {
-	display: flex;
-	flex-wrap: wrap;
-	font-size: 14pt;
-	text-align: center;
-	justify-content: center;
-}
-.pipeline {
-	padding: 4px 4px 4px 4px;
-	margin: 4px;
-	border-radius: 4px;
-	flex: 1 1 auto;
-}
+		* {
+			margin: 0;
+			padding: 0;
+			font-family: Roboto Mono, monospace;
+			color: var(--color-text);
+		}
 
-.active {
-	background: repeating-linear-gradient(
-		135deg,
-		rgba(255, 255, 255, 0.0),
-		rgba(255, 255, 255, 0.0) 10px,
-		rgba(255, 255, 255, 0.25) 10px,
-		rgba(255, 255, 255, 0.25) 20px
-	);
-	background-size: 226px;
-	animation: active 10s linear infinite;
-}
-@keyframes active {
-	100% {
-		background-position: 112px 0px;
-	}
-}
+		html, body {
+			background-color: var(--color-background);
+		}
 
-.failed {
-	background-color: var(--color-pipeline-failed);
-}
-.success {
-	background-color: var(--color-pipeline-success);
-}
-.canceled {
-	background-color: var(--color-pipeline-canceled);
-}
-.skipped {
-	background-color: var(--color-pipeline-skipped);
-}
-.ref {
-	opacity: .4;
-}
-a {
-	text-decoration: none;
-}
-a:hover {
-	color: var(--color-text-hover);
-}
-#error {
-	height: 40%;
-	width: 100%;
-}
-#error>div{
-	color: #FCFCFC;
-	font-size: 24pt;
-	border-radius: 4px;
-	background-color: #C31E00;
-	padding: 16px;
-	margin: 16px;
-	padding: 16px;
-	text-align: center;
-}
-#emptyPipelines {
-	text-align: center;
-	width: 100%;
-	position: absolute;
-	top: 30%;
-	color: #FCFCFC;
-	font-size: 200pt;
-}
+		#app {
+		}
+
+		#pipeline-container {
+			display: flex;
+			flex-wrap: wrap;
+			font-size: 14pt;
+			text-align: center;
+			justify-content: center;
+		}
+
+		.pipeline {
+			padding: 4px 4px 4px 4px;
+			margin: 4px;
+			border-radius: 4px;
+			flex: 1 1 auto;
+		}
+
+		.active {
+			background: repeating-linear-gradient(
+					135deg,
+					rgba(255, 255, 255, 0.0),
+					rgba(255, 255, 255, 0.0) 10px,
+					rgba(255, 255, 255, 0.25) 10px,
+					rgba(255, 255, 255, 0.25) 20px
+			);
+			background-size: 226px;
+			animation: active 10s linear infinite;
+		}
+
+		@keyframes active {
+			100% {
+				background-position: 112px 0px;
+			}
+		}
+
+		.failed {
+			background-color: var(--color-pipeline-failed);
+		}
+
+		.success {
+			background-color: var(--color-pipeline-success);
+		}
+
+		.manual {
+			background-color: var(--color-pipeline-manual);
+		}
+
+		.canceled {
+			background-color: var(--color-pipeline-canceled);
+		}
+
+		.skipped {
+			background-color: var(--color-pipeline-skipped);
+		}
+
+		.ref {
+			opacity: .4;
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		a:hover {
+			color: var(--color-text-hover);
+		}
+
+		#error {
+			height: 40%;
+			width: 100%;
+		}
+
+		#error > div {
+			color: #FCFCFC;
+			font-size: 24pt;
+			border-radius: 4px;
+			background-color: #C31E00;
+			padding: 16px;
+			margin: 16px;
+			padding: 16px;
+			text-align: center;
+		}
+
+		#emptyPipelines {
+			text-align: center;
+			width: 100%;
+			position: absolute;
+			top: 30%;
+			color: #FCFCFC;
+			font-size: 200pt;
+		}
 	</style>
 
 </head>
 
 <body>
-	<div id="app">
-		<div id="error" v-if="error"><div>{{ errorMessage }}</div></div>
-		<div id="emptyPipelines" v-if="emptyPipelines"><p>☮️</p></div>
+<div id="app">
+	<div id="error" v-if="error">
+		<div>{{ errorMessage }}</div>
+	</div>
+	<div id="emptyPipelines" v-if="emptyPipelines"><p>☮️</p></div>
 
-		<div id="pipeline-container">
-			<div class="pipeline" v-for="pipeline in pipelines" v-bind:class="{ [pipeline.status]: true, 'active': pipeline.running }">
-				<p class="repo">
-					<span v-if="pipeline.running"><a :href="pipeline.active.url" rel="noopener noreferrer">{{ pipeline.name }}</a></span>
-					<span v-if="!pipeline.running"><a :href="pipeline.current.url" rel="noopener noreferrer">{{ pipeline.name }}</a></span>
-				</p>
-				<p class="ref">{{ pipeline.ref }}</p>
-			</div>
+	<div id="pipeline-container">
+		<div class="pipeline" v-for="pipeline in pipelines"
+			 v-bind:class="{ [pipeline.status]: true, 'active': pipeline.running }">
+			<p class="repo">
+				<span v-if="pipeline.running"><a :href="pipeline.active.url" rel="noopener noreferrer">{{ pipeline.name }}</a></span>
+				<span v-if="!pipeline.running"><a :href="pipeline.current.url" rel="noopener noreferrer">{{ pipeline.name }}</a></span>
+			</p>
+			<p class="ref">{{ pipeline.ref }}</p>
 		</div>
 	</div>
+</div>
 
 <script>
 
-var iconGreen = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB9UlEQVRYhcXXO2gUURSH8d9egohVCBLBQoLdgISggoVPCEGLNLZTiliIIlYWt7DQQVAEK0GwUljBzkYssoq9SorABsEYQggWIiFFCFuIxeyENYlksu7u/Lt5MN83Zx73nJqSqTezIZzBFI7jKIYRsIZFzOIDZtIkbpS5bq0E+CBu4ioOl/RdxQs8SpO43JVAvZkFXMc9+Z12kw08RJYmsVVaoN7MhvEKl7oEb80XXE6TuLSrQL2ZjaKBYz2CF1nGVJrE+X8KtO/8I8Z7DC+ygtNpEheLHaEDHvCyj3Dyl/hNvZnt3yaAa5juI7zIOO4WGzU2S/8NIwMQgBaSNIkLRQVuDBAO+3AHau1n/x1HBigA6zgUcLICOBzAdMCFCuBFJgNOVCgwETBWocBY0P1C04sMhd3P6W+KZqKqtIK8k6kqSwGfKxSYDXhfoUAj4JNqHsM63oY0ib/xrAKB12kS14rP8Cl+DhDewgPaDUmaxDXEAQo8SZP4dVOgned4NwD4nK0dUZF6MxuRN6W97oiLrOBsmsSFYsdfv+I0ib/ko9dcn+CTnfBtAm2JHziPmR7CZ+Xt+PzWAzsuRu1KXMQt/7dWbOA+TnXOAp0pM5yO4jauYLQkuBhOH+80ju1JoENkCOfk78iEfDwfkVdxFUvyUjfsYTz/AyNDf+XwTOOTAAAAAElFTkSuQmCC";
-var iconRed = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABm0lEQVRYhcXXPWsUURjF8d9cliAWEhaJCiLBQiyDWooIYufnEItgay0WwdLSr2BrYaHRTxBMSC1KZAuR4EuRqIWPxcwtXHfdGXZeDpxumf/ZO/feOU+hpoIRruM2ruAiVpHwHR+wizd4VfCj7rMXgU8HD4NJEDX9JXgSnF8GnILN6mF1wdM+rsKvNIWvBi+WAE97J7hQF74W7LcIz/4YXK7zz/c6gGdPgvX/vfPnHcKz94ITswLc6wGevTVr6Q97DPAzyntEqjJsYlxrl7ajFTyAIsoQ79U9Ju3pCGcSrg0Ah5O4k3BzAHjWrYSrAwbYSOZdDP1oPSk/qUNplBb/plvlMjGUfiVlkxlKBwk7AwbYTXg9YIDtfBW/0/9xPMK5VPAbT3uGw7MiH4DgVPC558/xpb/iBHd7DPD4n/WIspK12YTneT9mVbIqxDi6acTZk9yE5io421GISSyq5VMr8bJF+NtoesyrPXE/+LYE+Dh4FE1Hs6kga8FW8KkBOA+nC6te0SDICDeU4/mGcjONlTfpVxwox/NtDcbzPwZJAshPq8kNAAAAAElFTkSuQmCC";
+	var iconGreen = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB9UlEQVRYhcXXO2gUURSH8d9egohVCBLBQoLdgISggoVPCEGLNLZTiliIIlYWt7DQQVAEK0GwUljBzkYssoq9SorABsEYQggWIiFFCFuIxeyENYlksu7u/Lt5MN83Zx73nJqSqTezIZzBFI7jKIYRsIZFzOIDZtIkbpS5bq0E+CBu4ioOl/RdxQs8SpO43JVAvZkFXMc9+Z12kw08RJYmsVVaoN7MhvEKl7oEb80XXE6TuLSrQL2ZjaKBYz2CF1nGVJrE+X8KtO/8I8Z7DC+ygtNpEheLHaEDHvCyj3Dyl/hNvZnt3yaAa5juI7zIOO4WGzU2S/8NIwMQgBaSNIkLRQVuDBAO+3AHau1n/x1HBigA6zgUcLICOBzAdMCFCuBFJgNOVCgwETBWocBY0P1C04sMhd3P6W+KZqKqtIK8k6kqSwGfKxSYDXhfoUAj4JNqHsM63oY0ib/xrAKB12kS14rP8Cl+DhDewgPaDUmaxDXEAQo8SZP4dVOgned4NwD4nK0dUZF6MxuRN6W97oiLrOBsmsSFYsdfv+I0ib/ko9dcn+CTnfBtAm2JHziPmR7CZ+Xt+PzWAzsuRu1KXMQt/7dWbOA+TnXOAp0pM5yO4jauYLQkuBhOH+80ju1JoENkCOfk78iEfDwfkVdxFUvyUjfsYTz/AyNDf+XwTOOTAAAAAElFTkSuQmCC";
+	var iconRed = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABm0lEQVRYhcXXPWsUURjF8d9cliAWEhaJCiLBQiyDWooIYufnEItgay0WwdLSr2BrYaHRTxBMSC1KZAuR4EuRqIWPxcwtXHfdGXZeDpxumf/ZO/feOU+hpoIRruM2ruAiVpHwHR+wizd4VfCj7rMXgU8HD4NJEDX9JXgSnF8GnILN6mF1wdM+rsKvNIWvBi+WAE97J7hQF74W7LcIz/4YXK7zz/c6gGdPgvX/vfPnHcKz94ITswLc6wGevTVr6Q97DPAzyntEqjJsYlxrl7ajFTyAIsoQ79U9Ju3pCGcSrg0Ah5O4k3BzAHjWrYSrAwbYSOZdDP1oPSk/qUNplBb/plvlMjGUfiVlkxlKBwk7AwbYTXg9YIDtfBW/0/9xPMK5VPAbT3uGw7MiH4DgVPC558/xpb/iBHd7DPD4n/WIspK12YTneT9mVbIqxDi6acTZk9yE5io421GISSyq5VMr8bJF+NtoesyrPXE/+LYE+Dh4FE1Hs6kga8FW8KkBOA+nC6te0SDICDeU4/mGcjONlTfpVxwox/NtDcbzPwZJAshPq8kNAAAAAElFTkSuQmCC";
 
-var themes = {
-	"default": {
-		"color-text": "#E6E6E6",
-		"color-text-hover": "#FEFEFE",
-		"color-background": "#0a0a0a",
-		"color-pipeline-success": "#1aaa55",
-		"color-pipeline-failed": "#e24329",
-		"color-pipeline-canceled": "#7F7F7F",
-		"color-pipeline-skipped": "#ABADAE"
-	},
-	"deuteranopia": {
-		"color-pipeline-success": "#4382f4",
-		"color-pipeline-failed": "#B5880C"
-	},
-	"protanope": {
-		"color-pipeline-success": "#105de1",
-		"color-pipeline-failed": "#786622"
-	},
-	"tritanerope": {
-		"color-pipeline-success": "#1696c3",
-		"color-pipeline-failed": "#fb105d"
-	},
-	"aprilfools": {
-		"color-pipeline-success": "#e24329",
-		"color-pipeline-failed": "#1aaa55",
-		"color-pipeline-canceled": "#ABADAE",
-		"color-pipeline-skipped": "#7F7F7F"
-	}
-};
-
-var app = new Vue({
-	el: '#app',
-	data: {
-		filterStatus: [],
-		onlyRefs: [],
-		pipelines: null,
-		sort: "alphabetically",
-		error: false,
-		errorMessage: null
-	},
-
-	created: function() {
-		// parse query params
-		let params = new URLSearchParams(window.location.search);
-
-		let paramFilterStatus = params.get("filterStatus");
-		if (paramFilterStatus) {
-			this.filterStatus = paramFilterStatus.split(",");
-		}
-
-		let paramOnlyRefs = params.get("onlyRefs");
-		if (paramOnlyRefs) {
-			this.onlyRefs = paramOnlyRefs.split(",");
-		}
-
-		let paramSort = params.get("sort");
-		if (paramSort) {
-			this.sort = paramSort;
-		}
-
-		let paramTheme = params.get("theme");
-		this.theme("default");
-		if (paramTheme && themes[paramTheme]) {
-			this.theme(paramTheme);
-		}
-
-		this.fetchPipelines();
-		this.timer = setInterval(this.fetchPipelines, 5000);
-	},
-
-	watch: {
-		pipelines: function() {
-			this.updateFavicon();
+	var themes = {
+		"default": {
+			"color-text": "#E6E6E6",
+			"color-text-hover": "#FEFEFE",
+			"color-background": "#0a0a0a",
+			"color-pipeline-success": "#1aaa55",
+			"color-pipeline-manual": "#126c35",
+			"color-pipeline-failed": "#e24329",
+			"color-pipeline-canceled": "#7F7F7F",
+			"color-pipeline-skipped": "#ABADAE"
 		},
-		error: function() {
-			this.updateFavicon();
+		"deuteranopia": {
+			"color-pipeline-success": "#4382f4",
+			"color-pipeline-manual": "#2f5daf",
+			"color-pipeline-failed": "#B5880C"
+		},
+		"protanope": {
+			"color-pipeline-success": "#105de1",
+			"color-pipeline-manual": "#0a3d98",
+			"color-pipeline-failed": "#786622"
+		},
+		"tritanerope": {
+			"color-pipeline-success": "#1696c3",
+			"color-pipeline-manual": "#0e5f7e",
+			"color-pipeline-failed": "#fb105d"
+		},
+		"aprilfools": {
+			"color-pipeline-success": "#e24329",
+			"color-pipeline-manual": "#a83421",
+			"color-pipeline-failed": "#1aaa55",
+			"color-pipeline-canceled": "#ABADAE",
+			"color-pipeline-skipped": "#7F7F7F"
 		}
-	},
+	};
 
-	methods: {
-		fetchPipelines: async function() {
-			try {
-				const response = await fetch('json', {credentials: "same-origin"});
-				const pipelines = await response.json();
-				var result = [];
-				for (let pipeline of pipelines) {
-					let pass = true;
-					if (this.filterStatus.includes(pipeline.status)) {
-						pass = false;
-					}
-					if ((this.onlyRefs.length != 0) && !this.onlyRefs.includes(pipeline.ref)) {
-						pass = false;
-					}
-					if (pass) {
-						result.push(pipeline);
-					}
-				}
-				if (this.sort == "importance") {
-					result.sort((a, b) => a.status.localeCompare(b.status));
-				}
-				this.pipelines = result;
-				this.error = false;				
+	var app = new Vue({
+		el: '#app',
+		data: {
+			filterStatus: [],
+			onlyRefs: [],
+			pipelines: null,
+			sort: "alphabetically",
+			error: false,
+			errorMessage: null
+		},
+
+		created: function () {
+			// parse query params
+			let params = new URLSearchParams(window.location.search);
+
+			let paramFilterStatus = params.get("filterStatus");
+			if (paramFilterStatus) {
+				this.filterStatus = paramFilterStatus.split(",");
 			}
-			catch(err) {
-				this.errorMessage = "Unable to retrieve data (" + err + ")";
-				this.error = true;
+
+			let paramOnlyRefs = params.get("onlyRefs");
+			if (paramOnlyRefs) {
+				this.onlyRefs = paramOnlyRefs.split(",");
+			}
+
+			let paramSort = params.get("sort");
+			if (paramSort) {
+				this.sort = paramSort;
+			}
+
+			let paramTheme = params.get("theme");
+			this.theme("default");
+			if (paramTheme && themes[paramTheme]) {
+				this.theme(paramTheme);
+			}
+
+			this.fetchPipelines();
+			this.timer = setInterval(this.fetchPipelines, 5000);
+		},
+
+		watch: {
+			pipelines: function () {
+				this.updateFavicon();
+			},
+			error: function () {
+				this.updateFavicon();
 			}
 		},
 
-		cancelAutoUpdate: function() {
+		methods: {
+			fetchPipelines: async function () {
+				try {
+					const response = await fetch('json', {credentials: "same-origin"});
+					const pipelines = await response.json();
+					var result = [];
+					for (let pipeline of pipelines) {
+						let pass = true;
+						if (this.filterStatus.includes(pipeline.status)) {
+							pass = false;
+						}
+						if ((this.onlyRefs.length != 0) && !this.onlyRefs.includes(pipeline.ref)) {
+							pass = false;
+						}
+						if (pass) {
+							result.push(pipeline);
+						}
+					}
+					if (this.sort == "importance") {
+						result.sort((a, b) => a.status.localeCompare(b.status));
+					}
+					this.pipelines = result;
+					this.error = false;
+				} catch (err) {
+					this.errorMessage = "Unable to retrieve data (" + err + ")";
+					this.error = true;
+				}
+			},
+
+			cancelAutoUpdate: function () {
+				clearInterval(this.timer);
+			},
+
+			updateFavicon: function () {
+				var favicon = document.getElementById("favicon");
+				var selectedIcon = (!this.error && this.healthyPipelines()) ? iconGreen : iconRed;
+				favicon.href = "data:image/png;base64," + selectedIcon;
+			},
+
+			arePipelinesEmpty: function () {
+				return this.pipelines != null && this.pipelines.length == 0;
+			},
+
+			theme: function (name) {
+				let theme = themes[name];
+				for (const key of Object.keys(theme)) {
+					document.documentElement.style.setProperty("--" + key, theme[key]);
+				}
+			},
+
+			healthyPipelines: function () {
+				if (!this.arePipelinesEmpty()) {
+					for (let pipeline of this.pipelines) {
+						if (pipeline.status == "failed") {
+							return false;
+						}
+					}
+				}
+				return true;
+			}
+
+		},
+
+		computed: {
+			emptyPipelines: function () {
+				return this.arePipelinesEmpty();
+			}
+		},
+
+		beforeDestroy() {
 			clearInterval(this.timer);
-		},
-
-		updateFavicon: function() {
-			var favicon = document.getElementById("favicon");
-			var selectedIcon = (!this.error && this.healthyPipelines()) ? iconGreen : iconRed;
-			favicon.href = "data:image/png;base64," + selectedIcon;
-		},
-
-		arePipelinesEmpty: function() {
-			return this.pipelines != null && this.pipelines.length == 0;
-		},
-
-		theme: function(name) {
-			let theme = themes[name];
-			for (const key of Object.keys(theme)) {
-				document.documentElement.style.setProperty("--" + key, theme[key]);
-			}
-		},
-
-		healthyPipelines: function() {
-			if (!this.arePipelinesEmpty()) {
-				for (let pipeline of this.pipelines) {
-					if (pipeline.status == "failed") {
-						return false;
-					}
-				}
-			}
-			return true;
 		}
 
-	},
-
-	computed: {
-		emptyPipelines: function() {
-			return this.arePipelinesEmpty();
-		}
-	},
-
-	beforeDestroy() {
-		clearInterval(this.timer);
-	}
-
-});
-
+	});
 </script>
 </body>
 
